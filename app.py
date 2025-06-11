@@ -47,7 +47,6 @@ for producto in data:
     descripcion = producto.get('Descripcion', '')
 
     img_tag = f"<img src='{img_url}' alt='Imagen producto' style='max-width: 100%; height: auto;'>" if img_url else ""
-
     productos_html += f"""
     <div class="producto" style="border:1px solid #ccc; padding:10px; margin-bottom:15px; border-radius:8px;">
         <h3 style="margin-bottom:5px;">{nombre}</h3>
@@ -56,7 +55,7 @@ for producto in data:
         {img_tag}
     </div>
     """
-    """
+    
 
 # Insertar productos en la plantilla
 html_final = plantilla.replace("<!-- PRODUCTOS_AQUI -->", productos_html)
