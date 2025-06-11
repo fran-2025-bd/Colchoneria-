@@ -14,7 +14,7 @@ client = gspread.authorize(scoped_creds)
 
 # Abrir hoja
 try:
-    sheet = client.open("sigbd rivadavia").worksheet("stock")
+    sheet = client.open("stock").worksheet("sigbd rivadavia")
     data = sheet.get_all_records()
 except Exception as e:
     st.error("❌ Error al acceder al Google Sheet.")
