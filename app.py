@@ -1,11 +1,8 @@
 import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
-img_url = producto.get("ImagenURL", "").strip()
-if img_url:
-    img_url = f"https://drive.google.com/uc?export=view&id={img_url}"
 
-# Configuración
+# Configuración de la página
 st.set_page_config(page_title="Catálogo | Colchonería Rey", layout="wide")
 
 # Autenticación Google Sheets con scopes adecuados
@@ -41,6 +38,9 @@ except FileNotFoundError:
 productos_html = ""
 for producto in data:
     raw_id = producto.get("ImagenURL", "").strip()
+    # Quitar cualquier "id=" o URL completa si la tienes, solo tomar el ID limpio:
+    if "id=" in raw_id:
+        raw_id = raw_id.split("id=")[-1].split("&")[0]
     img_url = f"https://drive.google.com/uc?export=view&id={raw_id}" if raw_id else ""
     nombre = producto.get('Nombre', 'Sin nombre')
     precio = producto.get('Precio', 'N/D')
@@ -55,7 +55,6 @@ for producto in data:
         {img_tag}
     </div>
     """
-    
 
 # Insertar productos en la plantilla
 html_final = plantilla.replace("<!-- PRODUCTOS_AQUI -->", productos_html)
