@@ -12,9 +12,9 @@ scoped_creds = Credentials.from_service_account_info(
 )
 client = gspread.authorize(scoped_creds)
 
-# Abrir hoja
+# Abrir hoja correctamente
 try:
-    sheet = client.open("stock").worksheet("sigbd rivadavia")
+    sheet = client.open("sigbd rivadavia").worksheet("stock")
     data = sheet.get_all_records()
 except Exception as e:
     st.error("❌ Error al acceder al Google Sheet.")
@@ -30,5 +30,7 @@ for i, producto in enumerate(data):
         st.markdown("----")
         st.subheader(producto.get("Nombre", "Sin nombre"))
         st.write(f"💸 **Precio:** ${producto.get('Precio', 'N/D')}")
-        if "Imagen" in producto and producto["Imagen"]:
-            st.image(producto["Imagen"], use_column_width=True)
+        st.write(f"📦 **Stock:** {producto.get('Stock', 'N/D')}")
+        st.caption(producto.get("Descripcion", ""))
+        if "ImagenURL" in producto and producto["ImagenURL"]:
+            st.image(producto["ImagenURL"], use_column_width=True)
