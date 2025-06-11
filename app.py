@@ -4,7 +4,7 @@ from google.oauth2.service_account import Credentials
 
 st.set_page_config(page_title="Catálogo | Colchonería Rey", layout="wide")
 
-# Autenticación
+# 🔐 Autenticación con scopes completos
 google_credentials = st.secrets["google_service_account"]
 scoped_creds = Credentials.from_service_account_info(
     google_credentials,
@@ -15,16 +15,17 @@ scoped_creds = Credentials.from_service_account_info(
 )
 client = gspread.authorize(scoped_creds)
 
-# Abrir hoja correctamente
+# 📄 Abrir hoja
 try:
     sheet = client.open("sigbd rivadavia").worksheet("stock")
     data = sheet.get_all_records()
+    st.write(data)  # ✅ MOSTRAR PARA VERIFICAR SI HAY DATOS
 except Exception as e:
     st.error("❌ Error al acceder al Google Sheet.")
     st.exception(e)
     st.stop()
 
-# Mostrar productos
+# 🛍️ Mostrar productos
 st.title("🛏️ Catálogo de Colchonería Rey")
 cols = st.columns(3)
 
@@ -33,7 +34,7 @@ for i, producto in enumerate(data):
         st.markdown("----")
         st.subheader(producto.get("Nombre", "Sin nombre"))
         st.write(f"💸 **Precio:** ${producto.get('Precio', 'N/D')}")
-        st.write(f"📦 **Stock:** {producto.get('Stock', 'N/D')}")
-        st.caption(producto.get("Descripcion", ""))
         if "ImagenURL" in producto and producto["ImagenURL"]:
             st.image(producto["ImagenURL"], use_column_width=True)
+        else:
+            st.write("📷 Sin imagen")
