@@ -1,13 +1,12 @@
-from flask import Flask, render_template
-import os
-import json
+import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
+import json
 
-app = Flask(__name__)
+st.set_page_config(page_title="Catálogo | Colchonería Rey", layout="wide")
 
-# Leer las credenciales directamente desde variable de entorno
-google_credentials = json.loads(os.environ["google_service_account"])
+# Leer credencial desde secrets
+google_credentials = json.loads(st.secrets["google_service_account"])
 
 # Autenticación
 scoped_creds = Credentials.from_service_account_info(
@@ -18,11 +17,19 @@ client = gspread.authorize(scoped_creds)
 
 # Acceder a la hoja
 sheet = client.open("sigbd rivadavia").worksheet("stock")
+data = sheet.get_all_records()
 
-@app.route('/')
-def catalogo():
-    data = sheet.get_all_records()
-    return render_template('catalogo.html', productos=data)
+# Título de la tienda
+st.markdown("# 🛏️ Catálogo de Colchonería Rey")
+st.markdown("Catálogo actualizado automáticamente desde Google Sheets.")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Mostrar productos en columnas
+cols = st.columns(3)
+
+for i, producto in enumerate(data):
+    with cols[i % 3]:
+        st.markdown("----")
+        st.subheader(producto.get("Nombre", "Sin nombre"))
+        st.write(f"💸 **Precio:** ${producto.get('Precio', 'N/D')}")
+        if "Imagen" in producto and producto["Imagen"]:
+            st.image(producto["Imagen"], use_column_width=True)
