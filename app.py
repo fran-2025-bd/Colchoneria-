@@ -7,7 +7,7 @@ from google.oauth2.service_account import Credentials
 app = Flask(__name__)
 
 # Leer las credenciales directamente desde variable de entorno
-google_credentials = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+google_credentials = json.loads(os.environ["google_service_account"])
 
 # Autenticación
 scoped_creds = Credentials.from_service_account_info(
