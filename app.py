@@ -34,14 +34,25 @@ except FileNotFoundError:
     st.error("❌ No se encontró el archivo template.html en el directorio.")
     st.stop()
 
+# Función para extraer el ID de Drive desde URL o retornar el valor si ya es ID
+def extraer_drive_id(url_o_id):
+    url_o_id = url_o_id.strip()
+    if "/d/" in url_o_id:
+        # Extrae lo que está entre /d/ y el siguiente /
+        try:
+            return url_o_id.split("/d/")[1].split("/")[0]
+        except IndexError:
+            return url_o_id  # Si no pudo extraer, retorna original
+    else:
+        return url_o_id
+
 # Generar HTML para productos
 productos_html = ""
 for producto in data:
-    raw_id = producto.get("ImagenURL", "").strip()
-    # Quitar cualquier "id=" o URL completa si la tienes, solo tomar el ID limpio:
-    if "id=" in raw_id:
-        raw_id = raw_id.split("id=")[-1].split("&")[0]
-    img_url = f"https://drive.google.com/uc?export=view&id={raw_id}" if raw_id else ""
+    raw_img = producto.get("ImagenURL", "").strip()
+    drive_id = extraer_drive_id(raw_img)
+    img_url = f"https://drive.google.com/uc?export=view&id={drive_id}" if drive_id else ""
+
     nombre = producto.get('Nombre', 'Sin nombre')
     precio = producto.get('Precio', 'N/D')
     descripcion = producto.get('Descripcion', '')
