@@ -35,6 +35,6 @@ for i, producto in enumerate(data):
         st.subheader(producto.get("Nombre", "Sin nombre"))
         st.write(f"💸 **Precio:** ${producto.get('Precio', 'N/D')}")
         if "ImagenURL" in producto and producto["ImagenURL"]:
-            st.image(producto["ImagenURL"], use_column_width=True)
+            st.image(producto["ImagenURL"], use_container_width=True)
         else:
             st.write("📷 Sin imagen")
