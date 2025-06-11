@@ -1,12 +1,11 @@
 import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
-import json
 
 st.set_page_config(page_title="Catálogo | Colchonería Rey", layout="wide")
 
-# Leer credencial desde secrets
-google_credentials = json.loads(st.secrets["google_service_account"])
+# Leer credencial directamente desde secrets (ya es un dict)
+google_credentials = st.secrets["google_service_account"]
 
 # Autenticación
 scoped_creds = Credentials.from_service_account_info(
