@@ -6,19 +6,10 @@ from google.oauth2.service_account import Credentials
 
 app = Flask(__name__)
 
-# Leer el secreto como diccionario (Streamlit o entorno)
-google_secret_raw = os.environ.get("GOOGLE_CREDENTIALS")
+# Leer las credenciales directamente desde variable de entorno
+google_credentials = json.loads(os.environ["GOOGLE_CREDENTIALS"])
 
-if google_secret_raw:
-    # En entorno: GOOGLE_CREDENTIALS es un JSON en string
-    google_credentials = json.loads(google_secret_raw)
-else:
-    # Alternativamente (ej: Streamlit-style secret), cargá desde archivo .toml o config
-    from dotenv import dotenv_values
-    secrets = dotenv_values(".env")  # Si tenés un archivo .env con TOML-like
-    google_credentials = json.loads(secrets["google_service_account"])
-
-# Autenticación con Google Sheets
+# Autenticación
 scoped_creds = Credentials.from_service_account_info(
     google_credentials,
     scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
