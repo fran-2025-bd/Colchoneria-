@@ -8,7 +8,10 @@ st.set_page_config(page_title="Catálogo | Colchonería Rey", layout="wide")
 google_credentials = st.secrets["google_service_account"]
 scoped_creds = Credentials.from_service_account_info(
     google_credentials,
-    scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
+    scopes=[
+        "https://www.googleapis.com/auth/spreadsheets.readonly",
+        "https://www.googleapis.com/auth/drive.metadata.readonly"
+    ]
 )
 client = gspread.authorize(scoped_creds)
 
